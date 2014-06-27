@@ -42,6 +42,7 @@ namespace Marss.TasksGenerator.Utility
             {
                 case ItemType.UserStory:
                 case ItemType.Issue:
+                case ItemType.BacklogItem:
                     return 1;//blue
 
                 case ItemType.Task:

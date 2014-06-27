@@ -68,7 +68,6 @@
             // miDeleteSelectedRowsToolStripMenuItem
             // 
             this.miDeleteSelectedRowsToolStripMenuItem.Name = "miDeleteSelectedRowsToolStripMenuItem";
-            this.miDeleteSelectedRowsToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
             this.miDeleteSelectedRowsToolStripMenuItem.Size = new System.Drawing.Size(227, 22);
             this.miDeleteSelectedRowsToolStripMenuItem.Text = "Delete Current Row";
             // 

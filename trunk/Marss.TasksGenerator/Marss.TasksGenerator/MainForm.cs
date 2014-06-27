@@ -156,6 +156,8 @@ namespace Marss.TasksGenerator
 
             treeWorkItems.EndUpdate();
             treeWorkItems.Tag = rootWorkItemId;
+
+            wbWorkItemDetails.DocumentText = string.Empty;
         }
 
         private void SelectNodeAndExpandBranch(object worksiteItemToSelect)
@@ -301,8 +303,29 @@ namespace Marss.TasksGenerator
             AboutForm.Show(this);
         }
 
+        private void treeWorkItems_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            wbWorkItemDetails.Font = Font;
+
+            if (e.Node != null && e.Node.Tag != null)
+            {
+                var details = _tfsDataProvider.GetWorkitemDetails(e.Node.Tag);
+                var sb = new StringBuilder();
+                sb.Append("<div style='font-family:Segoe UI;font-size:9pt;'>");
+                sb.AppendFormat("<b>{0} #{1}.</b> {2}<hr size='1'/>", details.TypeName, details.Id, details.Title);
+                sb.Append(details.Description);
+                sb.Append("</div>");
+
+                wbWorkItemDetails.DocumentText = sb.ToString();
+            }
+            else
+            {
+                wbWorkItemDetails.DocumentText = string.Empty;
+            }
+        }
 
         #endregion
+
 
        
     }

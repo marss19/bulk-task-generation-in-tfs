@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.TeamFoundation.WorkItemTracking.Client;
 using Marss.TasksGenerator.BLL.TaskTemplates;
 using System.Data;
+using System.Web;
 
 namespace Marss.TasksGenerator.BLL.TFS
 {
@@ -186,6 +187,29 @@ order by [System.Id] mode (Recursive)",
                 task.Save();
             }
         }
+
+        public WorkitemDetails GetWorkitemDetails(object item)
+        {
+            if (item == null)
+                throw new ArgumentNullException("workItem");
+
+            var workItem = (WorkItem)item;
+            var details = new WorkitemDetails
+                {
+                    Id = workItem.Id,
+                    TypeName = workItem.Type.Name,
+                    Title = workItem.Title,
+                };
+
+            if (workItem.Fields.Contains("Description HTML"))
+                details.Description = (string)workItem.Fields["Description HTML"].Value;
+            
+            if (string.IsNullOrWhiteSpace(details.Description))
+                details.Description = HttpUtility.HtmlEncode(workItem.Description);
+
+            return details;
+        }
+
 
         #region private
 

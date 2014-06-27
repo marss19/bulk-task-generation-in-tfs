@@ -32,6 +32,9 @@ namespace Marss.TasksGenerator.BLL
                     case "Feature":
                         return ItemType.Feature;
 
+                    case "Product Backlog Item":
+                        return ItemType.BacklogItem;
+
                     default:
                         return ItemType.Other;
                 }
