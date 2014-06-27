@@ -13,6 +13,7 @@ namespace Marss.TasksGenerator.BLL
         Issue,
         Task,
         Bug,
-        Feature
+        Feature,
+        BacklogItem
     }
 }
