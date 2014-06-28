@@ -36,7 +36,7 @@
             // pictureBox1
             // 
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(30, 12);
+            this.pictureBox1.Location = new System.Drawing.Point(47, 12);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(130, 14);
             this.pictureBox1.TabIndex = 0;
@@ -46,11 +46,11 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(189, 42);
+            this.ClientSize = new System.Drawing.Size(219, 35);
             this.Controls.Add(this.pictureBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "AddTasksProgressForm";
-            this.Text = "Adding tasks. Please wait..";
+            this.Text = "Doing someting useful, please wait..";
             this.Shown += new System.EventHandler(this.AddTasksProgressForm_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);

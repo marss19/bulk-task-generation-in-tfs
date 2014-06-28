@@ -42,6 +42,7 @@
             this.horizontalSplitContainer = new System.Windows.Forms.SplitContainer();
             this.verticalSplitContainer = new System.Windows.Forms.SplitContainer();
             this.treeWorkItems = new System.Windows.Forms.TreeView();
+            this.treeImages = new System.Windows.Forms.ImageList(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
             this.tbWorkItemId = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -49,7 +50,6 @@
             this.btnLoadItems = new System.Windows.Forms.Button();
             this.pnlTaskTemplate = new System.Windows.Forms.Panel();
             this.wbWorkItemDetails = new System.Windows.Forms.WebBrowser();
-            this.treeImages = new System.Windows.Forms.ImageList(this.components);
             this.toolMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.horizontalSplitContainer)).BeginInit();
             this.horizontalSplitContainer.Panel1.SuspendLayout();
@@ -176,6 +176,7 @@
             // 
             // treeWorkItems
             // 
+            this.treeWorkItems.AllowDrop = true;
             this.treeWorkItems.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeWorkItems.HideSelection = false;
             this.treeWorkItems.ImageIndex = 0;
@@ -185,7 +186,20 @@
             this.treeWorkItems.SelectedImageIndex = 0;
             this.treeWorkItems.Size = new System.Drawing.Size(410, 573);
             this.treeWorkItems.TabIndex = 0;
+            this.treeWorkItems.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.treeWorkItems_ItemDrag);
             this.treeWorkItems.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeWorkItems_AfterSelect);
+            this.treeWorkItems.DragDrop += new System.Windows.Forms.DragEventHandler(this.treeWorkItems_DragDrop);
+            this.treeWorkItems.DragEnter += new System.Windows.Forms.DragEventHandler(this.treeWorkItems_DragEnter);          
+            // 
+            // treeImages
+            // 
+            this.treeImages.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("treeImages.ImageStream")));
+            this.treeImages.TransparentColor = System.Drawing.Color.Transparent;
+            this.treeImages.Images.SetKeyName(0, "transparent.png");
+            this.treeImages.Images.SetKeyName(1, "blue.png");
+            this.treeImages.Images.SetKeyName(2, "yellow.png");
+            this.treeImages.Images.SetKeyName(3, "violet.png");
+            this.treeImages.Images.SetKeyName(4, "red.png");
             // 
             // panel1
             // 
@@ -260,16 +274,6 @@
             this.wbWorkItemDetails.Name = "wbWorkItemDetails";
             this.wbWorkItemDetails.Size = new System.Drawing.Size(1234, 86);
             this.wbWorkItemDetails.TabIndex = 0;
-            // 
-            // treeImages
-            // 
-            this.treeImages.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("treeImages.ImageStream")));
-            this.treeImages.TransparentColor = System.Drawing.Color.Transparent;
-            this.treeImages.Images.SetKeyName(0, "transparent.png");
-            this.treeImages.Images.SetKeyName(1, "blue.png");
-            this.treeImages.Images.SetKeyName(2, "yellow.png");
-            this.treeImages.Images.SetKeyName(3, "violet.png");
-            this.treeImages.Images.SetKeyName(4, "red.png");
             // 
             // MainForm
             // 

@@ -18,14 +18,16 @@ namespace Marss.TasksGenerator
         }
 
        
-        public void ExecuteAction(Form parentForm, Action longRunningAction)
+        public static void ExecuteAction(Form parentForm, string caption, Action longRunningAction)
         {
-            StartPosition = FormStartPosition.CenterParent;
-            _longRunningAction = longRunningAction;
+            var form = new AddTasksProgressForm();
+            form.Text = caption;
+            form.StartPosition = FormStartPosition.CenterParent;
+            form._longRunningAction = longRunningAction;
 
-            ShowDialog(parentForm);
-            if (_lastError != null)
-                throw new Exception(_lastError);
+            form.ShowDialog(parentForm);
+            if (form._lastError != null)
+                throw new Exception(form._lastError);
         }
 
         #region private
