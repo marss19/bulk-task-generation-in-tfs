@@ -210,6 +210,29 @@ order by [System.Id] mode (Recursive)",
             return details;
         }
 
+        public bool MoveWorkItem(object movedItem, object newParentItem)
+        {
+            var movedWorkitem = (WorkItem)movedItem;
+            var newParentWorkitem = (WorkItem)newParentItem;
+           
+            for (var i = 0; i < movedWorkitem.Links.Count; i++)
+            {
+                var relatedLink = movedWorkitem.Links[i] as RelatedLink;
+                if (relatedLink != null && relatedLink.LinkTypeEnd.Name == "Parent")
+                {
+                    if (relatedLink.RelatedWorkItemId == newParentWorkitem.Id)
+                        return false;
+
+                    movedWorkitem.Links.Remove (relatedLink);
+                    break;
+                }
+            }
+
+            movedWorkitem.Links.Add(new WorkItemLink(_hierarchyLinkType.ReverseEnd, newParentWorkitem.Id));
+            movedWorkitem.Save();
+            return true;
+        }
+
 
         #region private
 

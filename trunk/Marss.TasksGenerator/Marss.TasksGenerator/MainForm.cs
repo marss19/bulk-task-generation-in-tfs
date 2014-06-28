@@ -279,11 +279,9 @@ namespace Marss.TasksGenerator
             var parentWorksiteItem = selectedNode != null ? selectedNode.Tag : null;
             try
             {
-                var frm = new AddTasksProgressForm();
-
                 var template = e.Template;
                 var tasksData = e.TasksData;
-                frm.ExecuteAction(this, () => _tfsDataProvider.AddTasks(template, tasksData, parentWorksiteItem));
+                AddTasksProgressForm.ExecuteAction(this, "Adding tasks, please wait...", () => _tfsDataProvider.AddTasks(template, tasksData, parentWorksiteItem));
               
             }
             catch (Exception ex)
@@ -324,8 +322,45 @@ namespace Marss.TasksGenerator
             }
         }
 
-        #endregion
 
+        private void treeWorkItems_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.Move;
+        }
+
+        private void treeWorkItems_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent("System.Windows.Forms.TreeNode", false))
+            {
+                var pt = ((TreeView)sender).PointToClient(new Point(e.X, e.Y));
+                var destinationNode = ((TreeView)sender).GetNodeAt(pt);
+                var movedNode = (TreeNode)e.Data.GetData("System.Windows.Forms.TreeNode");
+                try
+                {
+                    var moved = false;
+                    AddTasksProgressForm.ExecuteAction(this, "Moving item, please wait...", () =>
+                    {
+                        moved = _tfsDataProvider.MoveWorkItem(movedNode.Tag, destinationNode.Tag);
+                    });
+
+                    if (moved)
+                        RefreshTree(destinationNode.Tag);
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message,
+                                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void treeWorkItems_ItemDrag(object sender, ItemDragEventArgs e)
+        {
+            DoDragDrop(e.Item, DragDropEffects.Move);
+        }
+
+        #endregion
 
        
     }
