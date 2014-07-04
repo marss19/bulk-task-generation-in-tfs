@@ -291,7 +291,9 @@ order by [System.Id] mode (Recursive)",
             foreach (WorkItem item in _cachedWorkItems)
             {
                 if (item.Id == id)
-                    return item;
+                {
+                    return item.State != "Removed" ? item : null;
+                }
             }
 
             return null;
