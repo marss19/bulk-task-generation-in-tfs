@@ -21,36 +21,18 @@ Global
 		SccLocalPath2 = Marss.TasksGenerator
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Debug|Mixed Platforms = Debug|Mixed Platforms
-		Debug|x86 = Debug|x86
-		Release|Any CPU = Release|Any CPU
-		Release|Mixed Platforms = Release|Mixed Platforms
-		Release|x86 = Release|x86
+		Debug|Tasks Generator Configuration = Debug|Tasks Generator Configuration
+		Release|Tasks Generator Configuration = Release|Tasks Generator Configuration
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9FF05DE8-7071-464A-B94B-5D6C9F41C7E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9FF05DE8-7071-464A-B94B-5D6C9F41C7E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9FF05DE8-7071-464A-B94B-5D6C9F41C7E5}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{9FF05DE8-7071-464A-B94B-5D6C9F41C7E5}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{9FF05DE8-7071-464A-B94B-5D6C9F41C7E5}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{9FF05DE8-7071-464A-B94B-5D6C9F41C7E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9FF05DE8-7071-464A-B94B-5D6C9F41C7E5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9FF05DE8-7071-464A-B94B-5D6C9F41C7E5}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{9FF05DE8-7071-464A-B94B-5D6C9F41C7E5}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{9FF05DE8-7071-464A-B94B-5D6C9F41C7E5}.Release|x86.ActiveCfg = Release|Any CPU
-		{688A0457-929D-4B95-ACB6-FF14BCF69BF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{688A0457-929D-4B95-ACB6-FF14BCF69BF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{688A0457-929D-4B95-ACB6-FF14BCF69BF2}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{688A0457-929D-4B95-ACB6-FF14BCF69BF2}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{688A0457-929D-4B95-ACB6-FF14BCF69BF2}.Debug|x86.ActiveCfg = Debug|x86
-		{688A0457-929D-4B95-ACB6-FF14BCF69BF2}.Debug|x86.Build.0 = Debug|x86
-		{688A0457-929D-4B95-ACB6-FF14BCF69BF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{688A0457-929D-4B95-ACB6-FF14BCF69BF2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{688A0457-929D-4B95-ACB6-FF14BCF69BF2}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{688A0457-929D-4B95-ACB6-FF14BCF69BF2}.Release|Mixed Platforms.Build.0 = Release|x86
-		{688A0457-929D-4B95-ACB6-FF14BCF69BF2}.Release|x86.ActiveCfg = Release|x86
-		{688A0457-929D-4B95-ACB6-FF14BCF69BF2}.Release|x86.Build.0 = Release|x86
+		{9FF05DE8-7071-464A-B94B-5D6C9F41C7E5}.Debug|Tasks Generator Configuration.ActiveCfg = Debug|Any CPU
+		{9FF05DE8-7071-464A-B94B-5D6C9F41C7E5}.Debug|Tasks Generator Configuration.Build.0 = Debug|Any CPU
+		{9FF05DE8-7071-464A-B94B-5D6C9F41C7E5}.Release|Tasks Generator Configuration.ActiveCfg = Release|Any CPU
+		{9FF05DE8-7071-464A-B94B-5D6C9F41C7E5}.Release|Tasks Generator Configuration.Build.0 = Release|Any CPU
+		{688A0457-929D-4B95-ACB6-FF14BCF69BF2}.Debug|Tasks Generator Configuration.ActiveCfg = Debug|Any CPU
+		{688A0457-929D-4B95-ACB6-FF14BCF69BF2}.Debug|Tasks Generator Configuration.Build.0 = Debug|Any CPU
+		{688A0457-929D-4B95-ACB6-FF14BCF69BF2}.Release|Tasks Generator Configuration.ActiveCfg = Release|Any CPU
+		{688A0457-929D-4B95-ACB6-FF14BCF69BF2}.Release|Tasks Generator Configuration.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
