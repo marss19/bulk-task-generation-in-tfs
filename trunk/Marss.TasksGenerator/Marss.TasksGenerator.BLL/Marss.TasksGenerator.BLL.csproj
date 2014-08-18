@@ -69,8 +69,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TaskTemplates\TaskTemplate.cs" />
     <Compile Include="TaskTemplates\TaskTemplateProvider.cs" />
-    <Compile Include="TFS\ShortTaskInfo.cs" />
-    <Compile Include="TFS\WorkitemDetails.cs" />
+    <Compile Include="TFS\Entities\TaskWorkitemDetails.cs" />
+    <Compile Include="TFS\Entities\WorkitemDetails.cs" />
     <Compile Include="TFS\TfsConnector.cs" />
     <Compile Include="TFS\TfsConstants.cs" />
     <Compile Include="TFS\TfsDataProvider.cs" />
