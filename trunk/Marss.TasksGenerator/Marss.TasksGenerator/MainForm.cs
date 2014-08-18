@@ -312,8 +312,21 @@ namespace Marss.TasksGenerator
                 sb.Append("<div style='font-family:Segoe UI;font-size:9pt;'>");
                 sb.AppendFormat("<b>{0} #{1}.</b> {2}<hr size='1'/>", details.TypeName, details.Id, details.Title);
                 sb.Append(details.Description);
-                sb.Append("</div>");
 
+                if (details is TaskWorkitemDetails)
+                {    
+                    if (!string.IsNullOrWhiteSpace(details.Description))
+                    {
+                        sb.Append("<hr size='1'/>");
+                    }
+
+                    var taskWorkitemDetails = (TaskWorkitemDetails)details;
+                    sb.AppendFormat("Original Estimate: {0}<br/>", taskWorkitemDetails.OriginalEstimate);
+                    sb.AppendFormat("Remaining Work: {0}<br/>", taskWorkitemDetails.RemainingWork);
+                    sb.AppendFormat("Completed Work: {0}<br/>", taskWorkitemDetails.CompletedWork);
+                }
+
+                sb.Append("</div>");
                 wbWorkItemDetails.DocumentText = sb.ToString();
             }
             else

@@ -85,7 +85,7 @@ order by [System.Id] mode (Recursive)",
 
 
             int[] workItemIds = _links.Select(x => x.TargetId).ToArray();
-            _cachedWorkItems = _store.Query(workItemIds, @"select [System.Id], [System.WorkItemType], [System.Title] from WorkItems");
+            _cachedWorkItems = _store.Query(workItemIds, @"select [System.Id], [System.WorkItemType], [System.Title], [Microsoft.VSTS.Scheduling.CompletedWork], [Microsoft.VSTS.Scheduling.OriginalEstimate], [Microsoft.VSTS.Scheduling.RemainingWork]  from WorkItems");
 
             return GetNodes(null);
         }
@@ -95,7 +95,7 @@ order by [System.Id] mode (Recursive)",
             areaId = areaId > 0 ? areaId : null;
             iterationId = iterationId > 0 ? iterationId : null;
 
-            _cachedWorkItems = _store.Query(string.Format("select [System.Id], [System.WorkItemType], [System.Title] from WorkItems where ([System.TeamProject] = '{0}' {1} {2}) ",
+            _cachedWorkItems = _store.Query(string.Format("select [System.Id], [System.WorkItemType], [System.Title], [Microsoft.VSTS.Scheduling.CompletedWork], [Microsoft.VSTS.Scheduling.OriginalEstimate], [Microsoft.VSTS.Scheduling.RemainingWork] from WorkItems where ([System.TeamProject] = '{0}' {1} {2}) ",
                 ProjectName,
                 areaId.HasValue ? string.Format(" and [System.AreaId] = " + areaId) : string.Empty,
                 iterationId.HasValue ? string.Format(" and [System.IterationId] = " + iterationId) : string.Empty
@@ -194,18 +194,31 @@ order by [System.Id] mode (Recursive)",
                 throw new ArgumentNullException("workItem");
 
             var workItem = (WorkItem)item;
-            var details = new WorkitemDetails
-                {
-                    Id = workItem.Id,
-                    TypeName = workItem.Type.Name,
-                    Title = workItem.Title,
-                };
+            var isTask = TfsUtility.GetItemType(workItem.Type.Name) == ItemType.Task;
+            
+            WorkitemDetails details = isTask ? new TaskWorkitemDetails() : new WorkitemDetails();
+            details.Id = workItem.Id;
+            details.TypeName = workItem.Type.Name;
+            details.Title = workItem.Title;
+            
 
-            if (workItem.Fields.Contains("Description HTML"))
-                details.Description = (string)workItem.Fields["Description HTML"].Value;
+            if (workItem.Fields.Contains(TfsConstants.Fields.DescriptionHtml))
+                details.Description = (string)workItem.Fields[TfsConstants.Fields.DescriptionHtml].Value;
             
             if (string.IsNullOrWhiteSpace(details.Description))
-                details.Description = HttpUtility.HtmlEncode(workItem.Description);
+                details.Description = HttpUtility.HtmlEncode(workItem.Description).Replace(Environment.NewLine, "<br/>");
+
+            if (isTask)
+            {
+                if (workItem.Fields.Contains(TfsConstants.Fields.OriginalEstimate))
+                    ((TaskWorkitemDetails)details).OriginalEstimate = (double?)workItem.Fields[TfsConstants.Fields.OriginalEstimate].Value;
+
+                if (workItem.Fields.Contains(TfsConstants.Fields.RemainingWork))
+                    ((TaskWorkitemDetails)details).RemainingWork = (double?)workItem.Fields[TfsConstants.Fields.RemainingWork].Value;
+
+                if (workItem.Fields.Contains(TfsConstants.Fields.CompletedWork))
+                    ((TaskWorkitemDetails)details).CompletedWork = (double?)workItem.Fields[TfsConstants.Fields.CompletedWork].Value;
+            }
 
             return details;
         }

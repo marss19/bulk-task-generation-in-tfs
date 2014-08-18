@@ -20,6 +20,11 @@ namespace Marss.TasksGenerator.BLL.TFS
         public class Fields
         {
             public const string ParentWorkItemId = "Parent Workitem ID";
+            public const string DescriptionHtml = "Description HTML";
+
+            public const string OriginalEstimate = "Microsoft.VSTS.Scheduling.OriginalEstimate";
+            public const string RemainingWork = "Microsoft.VSTS.Scheduling.RemainingWork";
+            public const string CompletedWork = "Microsoft.VSTS.Scheduling.CompletedWork";
         }
 
     }
