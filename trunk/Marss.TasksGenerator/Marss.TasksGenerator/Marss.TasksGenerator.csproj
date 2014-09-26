@@ -104,6 +104,12 @@
     <Compile Include="AddTasksProgressForm.Designer.cs">
       <DependentUpon>AddTasksProgressForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="EditTaskForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditTaskForm.Designer.cs">
+      <DependentUpon>EditTaskForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="EditTemplateForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -133,6 +139,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AddTasksProgressForm.resx">
       <DependentUpon>AddTasksProgressForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditTaskForm.resx">
+      <DependentUpon>EditTaskForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EditTemplateForm.resx">
       <DependentUpon>EditTemplateForm.cs</DependentUpon>

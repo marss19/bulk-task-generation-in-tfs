@@ -25,6 +25,14 @@ namespace Marss.TasksGenerator.BLL.TFS
             public const string OriginalEstimate = "Microsoft.VSTS.Scheduling.OriginalEstimate";
             public const string RemainingWork = "Microsoft.VSTS.Scheduling.RemainingWork";
             public const string CompletedWork = "Microsoft.VSTS.Scheduling.CompletedWork";
+
+            public const string State = "State";
+            public const string Title = "Title";
+        }
+
+        public class States
+        {
+            public const string Removed = "Removed";
         }
 
     }

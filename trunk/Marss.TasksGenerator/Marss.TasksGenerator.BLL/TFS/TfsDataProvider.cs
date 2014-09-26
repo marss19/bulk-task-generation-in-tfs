@@ -23,19 +23,32 @@ namespace Marss.TasksGenerator.BLL.TFS
             _project = store.Projects[projectName];
             _taskType = _project.WorkItemTypes[TfsConstants.WorkItemTypes.Task];
             _hierarchyLinkType = store.WorkItemLinkTypes[TfsConstants.WorkItemLinkTypes.Hierarchy];
+
+            var task = _taskType.NewWorkItem();
+            OriginalEstimateFieldName = task.Fields.Contains(TfsConstants.Fields.OriginalEstimate) ? task.Fields[TfsConstants.Fields.OriginalEstimate].Name : "Original estimate";
+            RemainingWorkFieldName = task.Fields.Contains(TfsConstants.Fields.RemainingWork) ? task.Fields[TfsConstants.Fields.RemainingWork].Name : "Remaining work";
+            CompletedWorkFieldName = task.Fields.Contains(TfsConstants.Fields.CompletedWork) ? task.Fields[TfsConstants.Fields.CompletedWork].Name : "Completed work";
         }
 
         public WorkItemType TaskType
         {
             get { return _taskType; }
         }
-      
+
+        public string OriginalEstimateFieldName { get; private set; }
+        public string RemainingWorkFieldName { get; private set; }
+        public string CompletedWorkFieldName { get; private set; }
 
         public List<string> GetAllowedValues(string fieldName)
         {
+            return GetAllowedValues(_taskType.NewWorkItem(), fieldName);
+        }
+
+        public List<string> GetAllowedValues(object item, string fieldName)
+        {
             var values = new List<string>();
-            var task = _taskType.NewWorkItem();
-            foreach (string field in task.Fields[fieldName].AllowedValues)
+            var workItem = (WorkItem)item;
+            foreach (string field in workItem.Fields[fieldName].AllowedValues)
             {
                 values.Add(field);
             }
@@ -188,6 +201,20 @@ order by [System.Id] mode (Recursive)",
             }
         }
 
+        public void UpdateWorkitem(object item, string title, string state, Dictionary<string, object> fieldValues)
+        {
+            var workItem = ((WorkItem)item);
+            workItem.Open();
+            workItem.Title = title;
+            workItem.State = state;
+            foreach (var pair in fieldValues)
+            {
+                workItem.Fields[pair.Key].Value = pair.Value;
+            }
+            workItem.Save();
+
+        }
+
         public WorkitemDetails GetWorkitemDetails(object item)
         {
             if (item == null)
@@ -246,6 +273,23 @@ order by [System.Id] mode (Recursive)",
             return true;
         }
 
+        public bool HasField(object item, string fieldName)
+        {
+            var workItem = (WorkItem)item;
+            return workItem.Fields.Contains(fieldName);
+        }
+
+        public string GetFieldCaption(object item, string fieldName)
+        {
+            var workItem = (WorkItem)item;
+            return workItem.Fields.Contains(fieldName) ? workItem.Fields[fieldName].Name : string.Format("[{0}]", fieldName);
+        }
+
+        public object GetFieldValue(object item, string fieldName)
+        {
+            var workItem = (WorkItem)item;
+            return workItem.Fields.Contains(fieldName) ? workItem.Fields[fieldName].Value : null;
+        }
 
         #region private
 
@@ -287,12 +331,21 @@ order by [System.Id] mode (Recursive)",
                     if (item == null)
                         return null;
 
-                    return new TreeItem()
+                    var isTask = TfsUtility.GetItemType(item.Type.Name) == ItemType.Task;
+                    TreeItem treeItem = isTask ? new TaskTreeItem() : new TreeItem();
+                    treeItem.WorkItemID = item.Id;
+                    treeItem.WorkItemTitle = item.Title;
+                    treeItem.TfsItem = item;
+                    treeItem.TypeName = item.Type.Name;
+
+                    if (isTask)
                     {
-                        Text = string.Format("{0}. {1}", item.Id, item.Title),
-                        TfsItem = item,
-                        TypeName = item.Type.Name
-                    };
+                        ((TaskTreeItem)treeItem).OriginalEstimate = (double?)GetFieldValue(item, TfsConstants.Fields.OriginalEstimate);
+                        ((TaskTreeItem)treeItem).RemainingWork = (double?)GetFieldValue(item, TfsConstants.Fields.RemainingWork);
+                        ((TaskTreeItem)treeItem).CompletedWork = (double?)GetFieldValue(item, TfsConstants.Fields.CompletedWork);
+                    }
+
+                    return treeItem;
                 }).Where(x => x != null).ToArray();
             Array.ForEach(workItems, w => w.Children.AddRange(GetNodes(w)));
 
@@ -305,7 +358,7 @@ order by [System.Id] mode (Recursive)",
             {
                 if (item.Id == id)
                 {
-                    return item.State != "Removed" ? item : null;
+                    return item.State != TfsConstants.States.Removed ? item : null;
                 }
             }
 

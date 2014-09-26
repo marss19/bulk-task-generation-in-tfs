@@ -8,7 +8,9 @@ namespace Marss.TasksGenerator.BLL
     public class TreeItem
     {
         public object TfsItem { get; set; }
-        public string Text { get; set; }
+
+        public int WorkItemID { get; set; }
+        public string WorkItemTitle { get; set; }
         public string TypeName { get; set; }
 
         public ItemType Type
@@ -24,5 +26,12 @@ namespace Marss.TasksGenerator.BLL
             get { return _children ?? (_children = new List<TreeItem>()); }
         }
         private List<TreeItem> _children;
+    }
+
+    public class TaskTreeItem : TreeItem
+    {
+        public double? OriginalEstimate { get; set; }
+        public double? RemainingWork { get; set; }
+        public double? CompletedWork { get; set; }
     }
 }
