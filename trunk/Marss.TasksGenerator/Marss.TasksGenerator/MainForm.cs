@@ -11,6 +11,7 @@ using Marss.TasksGenerator.BLL.TFS;
 using Marss.TasksGenerator.Utility;
 using System.Threading.Tasks;
 using Marss.TasksGenerator.BLL;
+using System.Text.RegularExpressions;
 
 namespace Marss.TasksGenerator
 {
@@ -150,14 +151,14 @@ namespace Marss.TasksGenerator
             treeWorkItems.BeginUpdate();
             treeWorkItems.Nodes.Clear();
             if (rootWorkItemId.HasValue)
-                treeWorkItems.Nodes.AddRange(TreeHelper.ConvertToTreeNodes(_tfsDataProvider.GetWorkItemsAsTreeByWorkItem(rootWorkItemId.Value)));
+                treeWorkItems.Nodes.AddRange(new TreeHelper().ConvertToTreeNodes(_tfsDataProvider.GetWorkItemsAsTreeByWorkItem(rootWorkItemId.Value), _tfsDataProvider));
             else
-                treeWorkItems.Nodes.AddRange(TreeHelper.ConvertToTreeNodes(_tfsDataProvider.GetWorkItemsAsTreeByAreaAndIteration(_selectedAreaId, _selectedIterationId)));
+                treeWorkItems.Nodes.AddRange(new TreeHelper().ConvertToTreeNodes(_tfsDataProvider.GetWorkItemsAsTreeByAreaAndIteration(_selectedAreaId, _selectedIterationId), _tfsDataProvider));
 
             treeWorkItems.EndUpdate();
             treeWorkItems.Tag = rootWorkItemId;
 
-            wbWorkItemDetails.DocumentText = string.Empty;
+            CleanUpDetailsPane();
         }
 
         private void SelectNodeAndExpandBranch(object worksiteItemToSelect)
@@ -181,7 +182,8 @@ namespace Marss.TasksGenerator
         {
             foreach(TreeNode node in nodes)
             {
-                if (TfsUtility.AreEqual(node.Tag, worksiteItem))
+                var itemToCompare = GetWorkitemBoundToNode(node);
+                if (TfsUtility.AreEqual(itemToCompare, worksiteItem))
                     return node;
 
                 var subNode = FindNode(node.Nodes, worksiteItem);
@@ -190,6 +192,63 @@ namespace Marss.TasksGenerator
             }
 
             return null;
+        }
+
+        private void UpdateSelectedNodeDetailsPane(TreeNode node)
+        {
+            var workItem = GetWorkitemBoundToNode(node);
+            var details = _tfsDataProvider.GetWorkitemDetails(workItem);
+            var sb = new StringBuilder();
+            sb.Append("<div style='font-family:Segoe UI;font-size:9pt;'>");
+            sb.AppendFormat("<b>{0} #{1}.</b> {2}<hr size='1'/>", details.TypeName, details.Id, details.Title);
+            sb.Append(details.Description);
+
+            if (!string.IsNullOrWhiteSpace(details.Description))
+            {
+                sb.Append("<hr size='1'/>");
+            }
+
+            if (details is TaskWorkitemDetails)
+            {
+                var taskWorkitemDetails = (TaskWorkitemDetails)details;
+                sb.AppendFormat("Original Estimate: {0}<br/>", taskWorkitemDetails.OriginalEstimate);
+                sb.AppendFormat("Remaining Work: {0}<br/>", taskWorkitemDetails.RemainingWork);
+                sb.AppendFormat("Completed Work: {0}<br/>", taskWorkitemDetails.CompletedWork);
+            }
+            else
+            {
+                double estimate = 0, remaining = 0, completed = 0;
+                CalculateSummaryValues(node, ref estimate, ref remaining, ref completed);
+
+                sb.AppendFormat("Summary Original Estimate: {0}<br/>", estimate);
+                sb.AppendFormat("Summary Remaining Work: {0}<br/>", remaining);
+                sb.AppendFormat("Summary Completed Work: {0}<br/>", completed);
+            }
+
+            sb.Append("</div>");
+            wbWorkItemDetails.DocumentText = sb.ToString();
+        }
+        private void CleanUpDetailsPane()
+        {
+            wbWorkItemDetails.DocumentText = string.Empty;
+        }
+
+        private void CalculateSummaryValues(TreeNode node, ref double estimate, ref double remaining, ref double completed)
+        {
+            foreach (TreeNode subNode in node.Nodes)
+            {
+                var task = subNode.Tag as TaskTreeItem;
+                if (task != null)
+                {
+                    if (task.OriginalEstimate.HasValue)
+                        estimate += task.OriginalEstimate.Value;
+                    if (task.RemainingWork.HasValue)
+                        remaining += task.RemainingWork.Value;
+                    if (task.CompletedWork.HasValue)
+                        completed += task.CompletedWork.Value;
+                }
+                CalculateSummaryValues(subNode, ref estimate, ref remaining, ref completed);
+            }
         }
 
         #endregion
@@ -276,7 +335,7 @@ namespace Marss.TasksGenerator
                 return;
             }
 
-            var parentWorksiteItem = selectedNode != null ? selectedNode.Tag : null;
+            var parentWorksiteItem = selectedNode != null ? GetWorkitemBoundToNode(selectedNode) : null;
             try
             {
                 var template = e.Template;
@@ -307,34 +366,13 @@ namespace Marss.TasksGenerator
 
             if (e.Node != null && e.Node.Tag != null)
             {
-                var details = _tfsDataProvider.GetWorkitemDetails(e.Node.Tag);
-                var sb = new StringBuilder();
-                sb.Append("<div style='font-family:Segoe UI;font-size:9pt;'>");
-                sb.AppendFormat("<b>{0} #{1}.</b> {2}<hr size='1'/>", details.TypeName, details.Id, details.Title);
-                sb.Append(details.Description);
-
-                if (details is TaskWorkitemDetails)
-                {    
-                    if (!string.IsNullOrWhiteSpace(details.Description))
-                    {
-                        sb.Append("<hr size='1'/>");
-                    }
-
-                    var taskWorkitemDetails = (TaskWorkitemDetails)details;
-                    sb.AppendFormat("Original Estimate: {0}<br/>", taskWorkitemDetails.OriginalEstimate);
-                    sb.AppendFormat("Remaining Work: {0}<br/>", taskWorkitemDetails.RemainingWork);
-                    sb.AppendFormat("Completed Work: {0}<br/>", taskWorkitemDetails.CompletedWork);
-                }
-
-                sb.Append("</div>");
-                wbWorkItemDetails.DocumentText = sb.ToString();
+                UpdateSelectedNodeDetailsPane(e.Node);
             }
             else
             {
-                wbWorkItemDetails.DocumentText = string.Empty;
+                CleanUpDetailsPane();
             }
         }
-
 
         private void treeWorkItems_DragEnter(object sender, DragEventArgs e)
         {
@@ -353,11 +391,11 @@ namespace Marss.TasksGenerator
                     var moved = false;
                     AddTasksProgressForm.ExecuteAction(this, "Moving item, please wait...", () =>
                     {
-                        moved = _tfsDataProvider.MoveWorkItem(movedNode.Tag, destinationNode.Tag);
+                        moved = _tfsDataProvider.MoveWorkItem(GetWorkitemBoundToNode(movedNode), GetWorkitemBoundToNode(destinationNode));
                     });
 
                     if (moved)
-                        RefreshTree(destinationNode.Tag);
+                        RefreshTree(GetWorkitemBoundToNode(destinationNode));
 
                 }
                 catch (Exception ex)
@@ -368,13 +406,47 @@ namespace Marss.TasksGenerator
             }
         }
 
+        private object GetWorkitemBoundToNode(TreeNode node)
+        {
+            var treeItem = node.Tag as TreeItem;
+            return treeItem != null ? treeItem.TfsItem : null;
+        }
+
         private void treeWorkItems_ItemDrag(object sender, ItemDragEventArgs e)
         {
             DoDragDrop(e.Item, DragDropEffects.Move);
         }
 
-        #endregion
+        private void treeWorkItems_DoubleClick(object sender, EventArgs e)
+        {
+            if (treeWorkItems.SelectedNode != null && ((TreeItem)treeWorkItems.SelectedNode.Tag).Type == ItemType.Task)
+            {
+                var form = EditTaskForm.EditTask(_tfsDataProvider, ((TreeItem)treeWorkItems.SelectedNode.Tag).TfsItem);
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    if (form.IsTaskRemoved)
+                    {
+                        treeWorkItems.Nodes.Remove(treeWorkItems.SelectedNode);
+                        CleanUpDetailsPane();
+                    }
+                    else
+                    {
+                        var treeItem = (TaskTreeItem)treeWorkItems.SelectedNode.Tag;
+                        treeItem.WorkItemTitle = form.TaskTitle;
+                        treeItem.OriginalEstimate = form.OriginalEstimate;
+                        treeItem.RemainingWork = form.RemainingWork;
 
+                        this.BeginInvoke((MethodInvoker)delegate
+                        {
+                            treeWorkItems.SelectedNode.Text = new TreeHelper().GetNodeTitle(treeItem);
+                            UpdateSelectedNodeDetailsPane(treeWorkItems.SelectedNode);
+                        });
+                    }
+                }
+            }
+        }
+
+        #endregion
        
     }
 }

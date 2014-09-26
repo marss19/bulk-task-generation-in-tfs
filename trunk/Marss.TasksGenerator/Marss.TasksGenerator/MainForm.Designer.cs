@@ -189,7 +189,8 @@
             this.treeWorkItems.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.treeWorkItems_ItemDrag);
             this.treeWorkItems.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeWorkItems_AfterSelect);
             this.treeWorkItems.DragDrop += new System.Windows.Forms.DragEventHandler(this.treeWorkItems_DragDrop);
-            this.treeWorkItems.DragEnter += new System.Windows.Forms.DragEventHandler(this.treeWorkItems_DragEnter);          
+            this.treeWorkItems.DragEnter += new System.Windows.Forms.DragEventHandler(this.treeWorkItems_DragEnter);
+            this.treeWorkItems.DoubleClick += new System.EventHandler(this.treeWorkItems_DoubleClick);
             // 
             // treeImages
             // 
