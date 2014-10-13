@@ -291,8 +291,10 @@ namespace Marss.TasksGenerator
             if (selectedItem.Tag == null)
             {
                 var currentTemplate = (string)toolBtnTaskTemplate.Tag;
-                ManageTemplatesForm.ShowForm(this, _tfsDataProvider);
-                BindTaskTemplates(currentTemplate);
+                var selectedTemplate = ManageTemplatesForm.ShowForm(this, _tfsDataProvider);
+                selectedTemplate = selectedTemplate ?? currentTemplate;
+                BindTaskTemplates(selectedTemplate);
+
             }
             else
             {

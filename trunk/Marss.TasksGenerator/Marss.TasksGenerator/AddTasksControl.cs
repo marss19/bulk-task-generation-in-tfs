@@ -274,7 +274,7 @@ namespace Marss.TasksGenerator
                 data.Rows.Add(row);
             }
 
-            if (AddTasksButtonClicked != null)
+            if (AddTasksButtonClicked != null && data.Rows.Count > 0)
             {
                 var args = new AddTasksEventArgs(data, _template);
                 args.ExternalParentWorkitemIsMandatory = !data.Columns.Contains(TfsConstants.Fields.ParentWorkItemId);
