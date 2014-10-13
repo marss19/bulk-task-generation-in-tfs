@@ -83,7 +83,6 @@
             // btnAddTasks
             // 
             this.btnAddTasks.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAddTasks.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAddTasks.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnAddTasks.Location = new System.Drawing.Point(693, 6);
             this.btnAddTasks.Name = "btnAddTasks";

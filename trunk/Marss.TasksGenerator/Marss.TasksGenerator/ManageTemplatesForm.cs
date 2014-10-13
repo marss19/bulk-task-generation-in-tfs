@@ -21,12 +21,14 @@ namespace Marss.TasksGenerator
 
         #region public static
 
-        public static void ShowForm(Form parent, TfsDataProvider dataProvider)
+        public static string ShowForm(Form parent, TfsDataProvider dataProvider)
         {
             var form = new ManageTemplatesForm();
             form._taskTemplateProvider = new TaskTemplateProvider(dataProvider);
             form.BindTemplates();
-            form.ShowDialog(parent);
+            return form.ShowDialog(parent) == DialogResult.OK
+                ? form.lbTemplates.SelectedItem.ToString()
+                : null;
         }
 
         #endregion
@@ -55,7 +57,19 @@ namespace Marss.TasksGenerator
                 _taskTemplateProvider.DeleteTemplate((string)lbTemplates.SelectedItem);
                 BindTemplates();
             }
-        } 
+        }
+
+        private void btnSelect_Click(object sender, EventArgs e)
+        {
+            if (lbTemplates.SelectedItem != null)
+            {
+                DialogResult = DialogResult.OK;
+            }
+            else
+            {
+                MessageBox.Show("Please select a template", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
 
         #endregion
 
@@ -90,5 +104,6 @@ namespace Marss.TasksGenerator
         }
 
         #endregion
+
     }
 }

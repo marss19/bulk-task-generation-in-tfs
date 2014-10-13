@@ -236,7 +236,6 @@
             // 
             // btnLoadSpecifiedItem
             // 
-            this.btnLoadSpecifiedItem.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLoadSpecifiedItem.Location = new System.Drawing.Point(307, 3);
             this.btnLoadSpecifiedItem.Name = "btnLoadSpecifiedItem";
             this.btnLoadSpecifiedItem.Size = new System.Drawing.Size(37, 27);
@@ -247,7 +246,6 @@
             // 
             // btnLoadItems
             // 
-            this.btnLoadItems.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLoadItems.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnLoadItems.Location = new System.Drawing.Point(3, 3);
             this.btnLoadItems.Name = "btnLoadItems";

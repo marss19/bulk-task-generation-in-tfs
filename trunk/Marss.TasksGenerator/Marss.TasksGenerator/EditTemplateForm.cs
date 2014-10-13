@@ -151,6 +151,12 @@ namespace Marss.TasksGenerator
                 template.DynamicFields.Add(item);
             }
 
+            if (template.DynamicFields.Count == 0)
+            {
+                MessageBox.Show("At least one dynamic field should be selected.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
             List<string> errors;
             if (_taskTemplateProvider.ValidateTemplate(template, _editing, out errors))
             {

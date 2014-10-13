@@ -69,8 +69,7 @@
             // 
             // btnSave
             // 
-            this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSave.Location = new System.Drawing.Point(824, 442);
+            this.btnSave.Location = new System.Drawing.Point(792, 442);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(64, 27);
             this.btnSave.TabIndex = 4;
@@ -90,17 +89,17 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(538, 253);
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label3.Location = new System.Drawing.Point(486, 243);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(78, 13);
+            this.label3.Size = new System.Drawing.Size(92, 13);
             this.label3.TabIndex = 10;
             this.label3.Text = "Dynamic Fields";
             // 
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCancel.Location = new System.Drawing.Point(894, 442);
+            this.btnCancel.Location = new System.Drawing.Point(862, 442);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(61, 27);
             this.btnCancel.TabIndex = 11;
@@ -109,37 +108,39 @@
             // 
             // label5
             // 
-            this.label5.Location = new System.Drawing.Point(848, 220);
+            this.label5.Location = new System.Drawing.Point(584, 226);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(107, 134);
+            this.label5.Size = new System.Drawing.Size(342, 41);
             this.label5.TabIndex = 13;
-            this.label5.Text = "* an unique value can be assigned to each task; will be presented as columns in t" +
-    "he grid on the Add Tasks form";
+            this.label5.Text = "These fields will be presented as columns in the grid on the Add Tasks form. If y" +
+    "ou want an unique value to be set to a field for each task add the field to the " +
+    "dynamic fields list.";
             // 
             // label6
             // 
-            this.label6.Location = new System.Drawing.Point(848, 34);
+            this.label6.Location = new System.Drawing.Point(571, 21);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(107, 120);
+            this.label6.Size = new System.Drawing.Size(355, 46);
             this.label6.TabIndex = 16;
-            this.label6.Text = "* the same value can be assigned for all new tasks; will be presented as separate" +
-    " controls on the Add Tasks form";
+            this.label6.Text = "These fields will be presented as separate controls on the Add Tasks form. If you" +
+    " want the same value to be set to a field for all new tasks add the field to the" +
+    " static fields list.";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(538, 41);
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label7.Location = new System.Drawing.Point(488, 34);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(64, 13);
+            this.label7.Size = new System.Drawing.Size(77, 13);
             this.label7.TabIndex = 15;
             this.label7.Text = "Static Fields";
             // 
             // btnAddStaticField
             // 
-            this.btnAddStaticField.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAddStaticField.Location = new System.Drawing.Point(429, 63);
             this.btnAddStaticField.Name = "btnAddStaticField";
-            this.btnAddStaticField.Size = new System.Drawing.Size(102, 27);
+            this.btnAddStaticField.Size = new System.Drawing.Size(53, 27);
             this.btnAddStaticField.TabIndex = 17;
             this.btnAddStaticField.Text = ">>";
             this.btnAddStaticField.UseVisualStyleBackColor = true;
@@ -147,10 +148,9 @@
             // 
             // btnRemoveStaticField
             // 
-            this.btnRemoveStaticField.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRemoveStaticField.Location = new System.Drawing.Point(429, 96);
             this.btnRemoveStaticField.Name = "btnRemoveStaticField";
-            this.btnRemoveStaticField.Size = new System.Drawing.Size(102, 27);
+            this.btnRemoveStaticField.Size = new System.Drawing.Size(53, 27);
             this.btnRemoveStaticField.TabIndex = 18;
             this.btnRemoveStaticField.Text = "<<";
             this.btnRemoveStaticField.UseVisualStyleBackColor = true;
@@ -158,10 +158,9 @@
             // 
             // btnAddDynamicField
             // 
-            this.btnAddDynamicField.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAddDynamicField.Location = new System.Drawing.Point(433, 294);
+            this.btnAddDynamicField.Location = new System.Drawing.Point(429, 294);
             this.btnAddDynamicField.Name = "btnAddDynamicField";
-            this.btnAddDynamicField.Size = new System.Drawing.Size(102, 27);
+            this.btnAddDynamicField.Size = new System.Drawing.Size(53, 27);
             this.btnAddDynamicField.TabIndex = 19;
             this.btnAddDynamicField.Text = ">>";
             this.btnAddDynamicField.UseVisualStyleBackColor = true;
@@ -169,10 +168,9 @@
             // 
             // btnRemoveDynamicField
             // 
-            this.btnRemoveDynamicField.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRemoveDynamicField.Location = new System.Drawing.Point(433, 327);
+            this.btnRemoveDynamicField.Location = new System.Drawing.Point(429, 327);
             this.btnRemoveDynamicField.Name = "btnRemoveDynamicField";
-            this.btnRemoveDynamicField.Size = new System.Drawing.Size(102, 27);
+            this.btnRemoveDynamicField.Size = new System.Drawing.Size(53, 28);
             this.btnRemoveDynamicField.TabIndex = 20;
             this.btnRemoveDynamicField.Text = "<<";
             this.btnRemoveDynamicField.UseVisualStyleBackColor = true;
@@ -189,25 +187,24 @@
             // lbStaticFields
             // 
             this.lbStaticFields.FormattingEnabled = true;
-            this.lbStaticFields.Location = new System.Drawing.Point(541, 63);
+            this.lbStaticFields.Location = new System.Drawing.Point(488, 63);
             this.lbStaticFields.Name = "lbStaticFields";
-            this.lbStaticFields.Size = new System.Drawing.Size(301, 160);
+            this.lbStaticFields.Size = new System.Drawing.Size(354, 160);
             this.lbStaticFields.TabIndex = 22;
             // 
             // lbDynamicFields
             // 
             this.lbDynamicFields.FormattingEnabled = true;
-            this.lbDynamicFields.Location = new System.Drawing.Point(541, 270);
+            this.lbDynamicFields.Location = new System.Drawing.Point(488, 270);
             this.lbDynamicFields.Name = "lbDynamicFields";
-            this.lbDynamicFields.Size = new System.Drawing.Size(301, 160);
+            this.lbDynamicFields.Size = new System.Drawing.Size(354, 160);
             this.lbDynamicFields.TabIndex = 23;
             // 
             // btnStaticUp
             // 
-            this.btnStaticUp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnStaticUp.Location = new System.Drawing.Point(686, 34);
+            this.btnStaticUp.Location = new System.Drawing.Point(848, 63);
             this.btnStaticUp.Name = "btnStaticUp";
-            this.btnStaticUp.Size = new System.Drawing.Size(70, 27);
+            this.btnStaticUp.Size = new System.Drawing.Size(78, 27);
             this.btnStaticUp.TabIndex = 24;
             this.btnStaticUp.Text = "Move Up";
             this.btnStaticUp.UseVisualStyleBackColor = true;
@@ -215,10 +212,9 @@
             // 
             // btnStaticDown
             // 
-            this.btnStaticDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnStaticDown.Location = new System.Drawing.Point(762, 34);
+            this.btnStaticDown.Location = new System.Drawing.Point(848, 96);
             this.btnStaticDown.Name = "btnStaticDown";
-            this.btnStaticDown.Size = new System.Drawing.Size(80, 27);
+            this.btnStaticDown.Size = new System.Drawing.Size(78, 27);
             this.btnStaticDown.TabIndex = 25;
             this.btnStaticDown.Text = "Move Down";
             this.btnStaticDown.UseVisualStyleBackColor = true;
@@ -226,8 +222,7 @@
             // 
             // btnDynamicDown
             // 
-            this.btnDynamicDown.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDynamicDown.Location = new System.Drawing.Point(762, 239);
+            this.btnDynamicDown.Location = new System.Drawing.Point(848, 303);
             this.btnDynamicDown.Name = "btnDynamicDown";
             this.btnDynamicDown.Size = new System.Drawing.Size(78, 27);
             this.btnDynamicDown.TabIndex = 27;
@@ -237,8 +232,7 @@
             // 
             // btnDynamicUp
             // 
-            this.btnDynamicUp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDynamicUp.Location = new System.Drawing.Point(678, 239);
+            this.btnDynamicUp.Location = new System.Drawing.Point(848, 270);
             this.btnDynamicUp.Name = "btnDynamicUp";
             this.btnDynamicUp.Size = new System.Drawing.Size(78, 27);
             this.btnDynamicUp.TabIndex = 26;
@@ -250,7 +244,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(964, 481);
+            this.ClientSize = new System.Drawing.Size(935, 481);
             this.Controls.Add(this.btnDynamicDown);
             this.Controls.Add(this.btnDynamicUp);
             this.Controls.Add(this.btnStaticDown);
