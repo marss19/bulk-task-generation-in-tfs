@@ -11,9 +11,8 @@ namespace Marss.TasksGenerator.Utility
 {
     public class TreeHelper
     {
-        public TreeNode[] ConvertToTreeNodes(TreeItem[] treeItems, TfsDataProvider tfsDataProvider)
+        public TreeNode[] ConvertToTreeNodes(TreeItem[] treeItems)
         {
-            _tfsDataProvider = tfsDataProvider;
             return treeItems.Select(Convert).ToArray();
         }
 
@@ -22,7 +21,6 @@ namespace Marss.TasksGenerator.Utility
             return string.Format("{0}. {1}", treeItem.WorkItemID, treeItem.WorkItemTitle);
         }
 
-        private TfsDataProvider _tfsDataProvider;
         private TreeNode Convert(TreeItem treeItem)
         {
             var nodeText = GetNodeTitle(treeItem);

@@ -7,8 +7,6 @@ namespace Marss.TasksGenerator.BLL
 {
     public class TreeItem
     {
-        public object TfsItem { get; set; }
-
         public int WorkItemID { get; set; }
         public string WorkItemTitle { get; set; }
         public string TypeName { get; set; }
