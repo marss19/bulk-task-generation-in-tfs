@@ -18,10 +18,12 @@ namespace Marss.TasksGenerator
             InitializeComponent();
         }
 
-        public static EditTaskForm EditTask(TfsDataProvider provider, object workItem)
+        public static EditTaskForm EditTask(TfsDataProvider provider, int workItemId)
         {
             var form = new EditTaskForm();
             form._provider = provider;
+
+            var workItem = provider.GetWorkItemObject(workItemId);
             form._workItem = workItem;
 
             form.tbTitle.Text = provider.GetFieldValue(workItem, TfsConstants.Fields.Title).ToString();

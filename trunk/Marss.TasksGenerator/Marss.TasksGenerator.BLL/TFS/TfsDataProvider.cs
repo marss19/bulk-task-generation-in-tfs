@@ -133,9 +133,12 @@ order by [System.Id] mode (Recursive)",
         }
 
 
-        public void AddTasks(TaskTemplate _template, System.Data.DataTable data, object defaultParentWorkItem)
+        public void AddTasks(TaskTemplate _template, System.Data.DataTable data, int? defaultParentWorkItemId)
         {
             var validTasks = new List< Tuple<WorkItem, WorkItem>>();
+            var defaultParentWorkItem = defaultParentWorkItemId.HasValue
+                ? GetWorkItemFromCache(defaultParentWorkItemId.Value)
+                : null;
 
             foreach (DataRow row in data.Rows)
             {
@@ -215,45 +218,29 @@ order by [System.Id] mode (Recursive)",
 
         }
 
-        public WorkitemDetails GetWorkitemDetails(object item)
+        public string GetWorkitemDescriptionHtml(int itemId)
         {
-            if (item == null)
-                throw new ArgumentNullException("workItem");
+            var workItem = GetWorkItemFromCache(itemId);
 
-            var workItem = (WorkItem)item;
-            var isTask = TfsUtility.GetItemType(workItem.Type.Name) == ItemType.Task;
-            
-            WorkitemDetails details = isTask ? new TaskWorkitemDetails() : new WorkitemDetails();
-            details.Id = workItem.Id;
-            details.TypeName = workItem.Type.Name;
-            details.Title = workItem.Title;
-            
+            string description = string.Empty;
 
             if (workItem.Fields.Contains(TfsConstants.Fields.DescriptionHtml))
-                details.Description = (string)workItem.Fields[TfsConstants.Fields.DescriptionHtml].Value;
-            
-            if (string.IsNullOrWhiteSpace(details.Description))
-                details.Description = HttpUtility.HtmlEncode(workItem.Description).Replace(Environment.NewLine, "<br/>");
+                description = (string)workItem.Fields[TfsConstants.Fields.DescriptionHtml].Value;
 
-            if (isTask)
-            {
-                if (workItem.Fields.Contains(TfsConstants.Fields.OriginalEstimate))
-                    ((TaskWorkitemDetails)details).OriginalEstimate = (double?)workItem.Fields[TfsConstants.Fields.OriginalEstimate].Value;
+            if (string.IsNullOrWhiteSpace(description))
+                description = HttpUtility.HtmlEncode(workItem.Description).Replace(Environment.NewLine, "<br/>");
 
-                if (workItem.Fields.Contains(TfsConstants.Fields.RemainingWork))
-                    ((TaskWorkitemDetails)details).RemainingWork = (double?)workItem.Fields[TfsConstants.Fields.RemainingWork].Value;
-
-                if (workItem.Fields.Contains(TfsConstants.Fields.CompletedWork))
-                    ((TaskWorkitemDetails)details).CompletedWork = (double?)workItem.Fields[TfsConstants.Fields.CompletedWork].Value;
-            }
-
-            return details;
+            return description;
         }
 
-        public bool MoveWorkItem(object movedItem, object newParentItem)
+        public bool MoveWorkItem(int movedItemId, int newParentItemId)
         {
-            var movedWorkitem = (WorkItem)movedItem;
-            var newParentWorkitem = (WorkItem)newParentItem;
+            var movedWorkitem = GetWorkItemFromCache(movedItemId);
+            var newParentWorkitem = GetWorkItemFromCache(newParentItemId);
+
+            if (movedWorkitem == null || newParentWorkitem == null)
+                return false;
+
            
             for (var i = 0; i < movedWorkitem.Links.Count; i++)
             {
@@ -291,6 +278,11 @@ order by [System.Id] mode (Recursive)",
             return workItem.Fields.Contains(fieldName) ? workItem.Fields[fieldName].Value : null;
         }
 
+        public object GetWorkItemObject(int id)
+        {
+            return GetWorkItemFromCache(id);
+        }
+
         #region private
 
 
@@ -321,7 +313,7 @@ order by [System.Id] mode (Recursive)",
             var currentId = 0;
             if (current != null)
             {
-                currentId = ((WorkItem)(current.TfsItem)).Id;
+                currentId = current.WorkItemID;
             }
 
             var workItems = _links.Where(x => x.SourceId == currentId)
@@ -335,7 +327,6 @@ order by [System.Id] mode (Recursive)",
                     TreeItem treeItem = isTask ? new TaskTreeItem() : new TreeItem();
                     treeItem.WorkItemID = item.Id;
                     treeItem.WorkItemTitle = item.Title;
-                    treeItem.TfsItem = item;
                     treeItem.TypeName = item.Type.Name;
 
                     if (isTask)

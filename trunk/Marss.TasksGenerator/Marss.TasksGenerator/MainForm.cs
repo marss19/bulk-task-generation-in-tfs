@@ -139,11 +139,13 @@ namespace Marss.TasksGenerator
             toolBtnTaskTemplate_Click(toolBtnTaskTemplate.DropDown.Items[templateIndex], EventArgs.Empty);
         }
 
-        private void RefreshTree(object selectedWorkItem)
+        private void RefreshTree(int? selectedWorkItemId)
         {
             int? rootWorkItemId = treeWorkItems.Tag != null ? (int?)treeWorkItems.Tag : null;
             LoadWorkItems(rootWorkItemId);
-            SelectNodeAndExpandBranch(selectedWorkItem);
+
+            if (selectedWorkItemId.HasValue)
+                SelectNodeAndExpandBranch(selectedWorkItemId.Value);
         }
 
         private void LoadWorkItems(int? rootWorkItemId)
@@ -151,9 +153,9 @@ namespace Marss.TasksGenerator
             treeWorkItems.BeginUpdate();
             treeWorkItems.Nodes.Clear();
             if (rootWorkItemId.HasValue)
-                treeWorkItems.Nodes.AddRange(new TreeHelper().ConvertToTreeNodes(_tfsDataProvider.GetWorkItemsAsTreeByWorkItem(rootWorkItemId.Value), _tfsDataProvider));
+                treeWorkItems.Nodes.AddRange(new TreeHelper().ConvertToTreeNodes(_tfsDataProvider.GetWorkItemsAsTreeByWorkItem(rootWorkItemId.Value)));
             else
-                treeWorkItems.Nodes.AddRange(new TreeHelper().ConvertToTreeNodes(_tfsDataProvider.GetWorkItemsAsTreeByAreaAndIteration(_selectedAreaId, _selectedIterationId), _tfsDataProvider));
+                treeWorkItems.Nodes.AddRange(new TreeHelper().ConvertToTreeNodes(_tfsDataProvider.GetWorkItemsAsTreeByAreaAndIteration(_selectedAreaId, _selectedIterationId)));
 
             treeWorkItems.EndUpdate();
             treeWorkItems.Tag = rootWorkItemId;
@@ -161,9 +163,9 @@ namespace Marss.TasksGenerator
             CleanUpDetailsPane();
         }
 
-        private void SelectNodeAndExpandBranch(object worksiteItemToSelect)
+        private void SelectNodeAndExpandBranch(int worksiteItemId)
         {
-            var node = FindNode(treeWorkItems.Nodes, worksiteItemToSelect);
+            var node = FindNode(treeWorkItems.Nodes, worksiteItemId);
             if (node != null)
             {
                 treeWorkItems.SelectedNode = node;
@@ -178,15 +180,14 @@ namespace Marss.TasksGenerator
             }
          }
 
-        private TreeNode FindNode(TreeNodeCollection nodes, object worksiteItem)
+        private TreeNode FindNode(TreeNodeCollection nodes, int worksiteItemId)
         {
             foreach(TreeNode node in nodes)
             {
-                var itemToCompare = GetWorkitemBoundToNode(node);
-                if (TfsUtility.AreEqual(itemToCompare, worksiteItem))
+                if (((TreeItem)node.Tag).WorkItemID == worksiteItemId)
                     return node;
 
-                var subNode = FindNode(node.Nodes, worksiteItem);
+                var subNode = FindNode(node.Nodes, worksiteItemId);
                 if (subNode != null)
                     return subNode;
             }
@@ -196,24 +197,27 @@ namespace Marss.TasksGenerator
 
         private void UpdateSelectedNodeDetailsPane(TreeNode node)
         {
-            var workItem = GetWorkitemBoundToNode(node);
-            var details = _tfsDataProvider.GetWorkitemDetails(workItem);
+            var treeItem = (TreeItem)node.Tag;
+            
+
             var sb = new StringBuilder();
             sb.Append("<div style='font-family:Segoe UI;font-size:9pt;'>");
-            sb.AppendFormat("<b>{0} #{1}.</b> {2}<hr size='1'/>", details.TypeName, details.Id, details.Title);
-            sb.Append(details.Description);
+            sb.AppendFormat("<b>{0} #{1}.</b> {2}<hr size='1'/>", treeItem.TypeName, treeItem.WorkItemID, treeItem.WorkItemTitle);
 
-            if (!string.IsNullOrWhiteSpace(details.Description))
+            var description = _tfsDataProvider.GetWorkitemDescriptionHtml(treeItem.WorkItemID);
+            sb.Append(description);
+
+            if (!string.IsNullOrWhiteSpace(description))
             {
                 sb.Append("<hr size='1'/>");
             }
 
-            if (details is TaskWorkitemDetails)
+            if (treeItem.Type == ItemType.Task)
             {
-                var taskWorkitemDetails = (TaskWorkitemDetails)details;
-                sb.AppendFormat("Original Estimate: {0}<br/>", taskWorkitemDetails.OriginalEstimate);
-                sb.AppendFormat("Remaining Work: {0}<br/>", taskWorkitemDetails.RemainingWork);
-                sb.AppendFormat("Completed Work: {0}<br/>", taskWorkitemDetails.CompletedWork);
+                var taskTreeItem = (TaskTreeItem)treeItem;
+                sb.AppendFormat("Original Estimate: {0}<br/>", taskTreeItem.OriginalEstimate);
+                sb.AppendFormat("Remaining Work: {0}<br/>", taskTreeItem.RemainingWork);
+                sb.AppendFormat("Completed Work: {0}<br/>", taskTreeItem.CompletedWork);
             }
             else
             {
@@ -335,12 +339,12 @@ namespace Marss.TasksGenerator
                 return;
             }
 
-            var parentWorksiteItem = selectedNode != null ? GetWorkitemBoundToNode(selectedNode) : null;
+            var parentWorksiteItemId = selectedNode != null ? (int?)GetIdOfWorkitemBoundToNode(selectedNode) : null;
             try
             {
                 var template = e.Template;
                 var tasksData = e.TasksData;
-                AddTasksProgressForm.ExecuteAction(this, "Adding tasks, please wait...", () => _tfsDataProvider.AddTasks(template, tasksData, parentWorksiteItem));
+                AddTasksProgressForm.ExecuteAction(this, "Adding tasks, please wait...", () => _tfsDataProvider.AddTasks(template, tasksData, parentWorksiteItemId));
               
             }
             catch (Exception ex)
@@ -351,7 +355,7 @@ namespace Marss.TasksGenerator
 
             if (!e.Failed)
             {
-                RefreshTree(parentWorksiteItem);
+                RefreshTree(parentWorksiteItemId);
             }
         }
 
@@ -391,11 +395,11 @@ namespace Marss.TasksGenerator
                     var moved = false;
                     AddTasksProgressForm.ExecuteAction(this, "Moving item, please wait...", () =>
                     {
-                        moved = _tfsDataProvider.MoveWorkItem(GetWorkitemBoundToNode(movedNode), GetWorkitemBoundToNode(destinationNode));
+                        moved = _tfsDataProvider.MoveWorkItem(GetIdOfWorkitemBoundToNode(movedNode), GetIdOfWorkitemBoundToNode(destinationNode));
                     });
 
                     if (moved)
-                        RefreshTree(GetWorkitemBoundToNode(destinationNode));
+                        RefreshTree(GetIdOfWorkitemBoundToNode(destinationNode));
 
                 }
                 catch (Exception ex)
@@ -406,10 +410,9 @@ namespace Marss.TasksGenerator
             }
         }
 
-        private object GetWorkitemBoundToNode(TreeNode node)
+        private int GetIdOfWorkitemBoundToNode(TreeNode node)
         {
-            var treeItem = node.Tag as TreeItem;
-            return treeItem != null ? treeItem.TfsItem : null;
+            return ((TreeItem)node.Tag).WorkItemID;
         }
 
         private void treeWorkItems_ItemDrag(object sender, ItemDragEventArgs e)
@@ -421,7 +424,7 @@ namespace Marss.TasksGenerator
         {
             if (treeWorkItems.SelectedNode != null && ((TreeItem)treeWorkItems.SelectedNode.Tag).Type == ItemType.Task)
             {
-                var form = EditTaskForm.EditTask(_tfsDataProvider, ((TreeItem)treeWorkItems.SelectedNode.Tag).TfsItem);
+                var form = EditTaskForm.EditTask(_tfsDataProvider, ((TreeItem)treeWorkItems.SelectedNode.Tag).WorkItemID);
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     if (form.IsTaskRemoved)
