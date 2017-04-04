@@ -1,4 +1,4 @@
-# bulk-task-generation-in-tfs
+# Bulk Generation of Tasks in TFS
 
 **What is it?**
 
@@ -14,8 +14,6 @@ The solution requires Team Explorer for Visual Studio 2010 (or newer) to be inst
 
 **How to use?**
 
-![](Home_http://2.bp.blogspot.com/-EUIZfsFinq4/U51-RAqfVOI/AAAAAAAACE0/Q4ynLcUsJzA/s1600/Untitled2.png)
-
 The main form is divided in 3 parts:
 
 * **main menu:** you can select a TFS project here, specify an area and/or an iteration to filter displayed work items and select a template for tasks creation. The default template containing all required fields is created automatically for each project. You can add more templates in case of need.
@@ -25,3 +23,5 @@ The main form is divided in 3 parts:
 Use **Task Template -> Manage Templates** menu item to create/edit/delete tasks templates. 
  
 ![alt tag](https://raw.githubusercontent.com/marss19/bulk-task-generation-in-tfs/master/bulk-task-generation-screenshot.png)
+
+Project migrated from https://bulktasksgeneration.codeplex.com/
