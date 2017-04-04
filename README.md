@@ -24,3 +24,4 @@ The main form is divided in 3 parts:
 
 Use **Task Template -> Manage Templates** menu item to create/edit/delete tasks templates. 
  
+![alt tag](https://raw.githubusercontent.com/marss19/bulk-task-generation-in-tfs/master/bulk-task-generation-screenshot.png)
